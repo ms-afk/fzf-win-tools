@@ -1,0 +1,33 @@
+name: Publish
+on:
+  release:
+    types: [published]
+permissions:
+  contents: write
+jobs:
+  publish:
+    name: Publish package
+    runs-on: windows-latest
+    env:
+      INNO_SETUP_INSTALL_DIR: "${{ github.workspace }}\\innosetup"
+    defaults:
+      run:
+        shell: pwsh
+        working-directory: ${{ github.workspace }}
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+      - name: 'Install Inno Setup'
+        run: |
+          Invoke-WebRequest https://jrsoftware.org/download.php/is.exe -OutFile is.exe
+          ./is.exe /DIR="$env:INNO_SETUP_INSTALL_DIR" /VERYSILENT /SUPPRESSMSGBOXES
+      - name: 'Create installer'
+        run: |
+          &"$env:INNO_SETUP_INSTALL_DIR\ISCC.exe" /DApplicationVersion=${{ github.event.release.tag_name }} `
+          /OOutput /Ffzf-win-tools-${{ github.event.release.tag_name }} installer.iss
+        working-directory: .\installer
+      - name: 'Publish'
+        run: gh release upload ${{ github.event.release.tag_name }} fzf-win-tools-${{ github.event.release.tag_name }}.exe
+        env:
+          GITHUB_TOKEN: ${{ github.TOKEN }}
+        working-directory: .\installer\Output
