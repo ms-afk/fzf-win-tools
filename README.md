@@ -25,4 +25,11 @@ winget install -e --id sharkdp.bat
 `fzfd` is a tool to search for files by name.\
 It is fast, has a preview window and it opens the file in explorer when you press enter.
 
-The installer creates a shortcut on the Desktop which will search for files in your user folder.
+The installer created shortcuts will search for files in your user folder.
+
+#### Commands
+
+- use `enter` to open the current file in explorer
+- use `tab` to select multiple files
+- use `shift-tab` to deselect files
+- use `ctrl-o` to open all selected files in explorer
