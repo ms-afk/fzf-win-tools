@@ -111,3 +111,12 @@ begin
     end;
   end;
 end;
+
+{ Remove old path format. Won't be necessary in new versions }
+procedure CurStepChanged(CurStep: TSetupStep);
+begin
+  if CurStep = ssPostInstall then
+  begin
+    RemoveDirFromPath(ExpandConstant('{app}')+'\src\');
+  end;
+end;
